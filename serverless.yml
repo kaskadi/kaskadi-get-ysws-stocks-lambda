@@ -23,10 +23,19 @@ functions:
   KaskadiStockUpdate:
     handler: kaskadi-stock-update-lambda.handler
     name: ${self:service.name}
+    layers:
+      - !ImportValue KaskadiEsLayerArn
+      - !ImportValue KaskadiWemaloLayerArn
     package:
       include:
         - 'kaskadi-stock-update-lambda.js'
+        - 'helpers/**'
         - 'node_modules/**'
+    environment:
+      WEMALO_TOKEN: ${env:WEMALO_TOKEN}
+      ES_ID: ${env:ES_ID}
+      ES_SECRET: ${env:ES_SECRET}
+      ES_ENDPOINT: ${env:ES_ENDPOINT}
     events:
       - http:
           method: get
