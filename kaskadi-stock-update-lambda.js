@@ -7,7 +7,7 @@ const updateStocks = require('./helpers/update-stocks.js')
 module.exports.handler = async (event) => {
   const eventSource = getLambdaEventSource(event)
   switch (eventSource) {
-    case 'isApiGatewayAwsProxy':
+    case 'api':
       const eventBody = JSON.parse(event.body)
       let warehouses
       if (eventBody.warehouses[0] === '*') {
@@ -24,7 +24,7 @@ module.exports.handler = async (event) => {
           message: 'Stocks updated!'
         })
       }
-    case 'isScheduledEvent':
+    case 'scheduled':
       const warehouses = await listWarehouses()
       await updateStocks(warehouses)
       const params = {
