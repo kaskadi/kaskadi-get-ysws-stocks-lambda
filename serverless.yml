@@ -18,6 +18,11 @@ provider:
   apiGateway:
     restApiId: !ImportValue KaskadiStocksRestAPIGatewayId
     restApiRootResourceId: !ImportValue KaskadiStocksRestAPIGatewayRootResourceId
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: !Ref KaskadiStockUpdater
 
 functions:
   KaskadiStockUpdate:
@@ -35,3 +40,17 @@ functions:
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !ImportValue KaskadiStocksCognitoAuthorizerId
+
+resources:
+  Resources:
+    KaskadiStockUpdater:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: KaskadiStockUpdater
+        DisplayName: Klimapartner's stock updater
+  Outputs:
+    KaskadiStockUpdaterArn:
+      Value:
+        Ref: KaskadiStockUpdater
+      Export:
+        Name: KaskadiStockUpdaterArn
