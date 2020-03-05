@@ -28,6 +28,7 @@ functions:
   KaskadiStockUpdate:
     handler: kaskadi-stock-update-lambda.handler
     name: ${self:service.name}
+    timeout: 30
     layers:
       - !ImportValue KaskadiEsLayerArn
       - !ImportValue KaskadiWemaloLayerArn
