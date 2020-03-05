@@ -1,5 +1,10 @@
 const WemaloClient = require('wemalo-api-wrapper')
 const client = new WemaloClient({token: process.env.WEMALO_TOKEN})
+const es = require('aws-es-client')({
+  id: process.env.ES_ID,
+  token: process.env.ES_SECRET,
+  url: process.env.ES_ENDPOINT
+})
 
 const updateProductStocks = require('./update-product-stocks.js')
 
