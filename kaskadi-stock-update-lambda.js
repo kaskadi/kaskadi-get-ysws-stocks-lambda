@@ -12,8 +12,9 @@ module.exports.handler = async (event) => {
       const eventBody = JSON.parse(event.body)
       if (eventBody.warehouses[0] === '*') {
         warehouses = await listWarehouses()
+      } else {
+        warehouses = eventBody.warehouses
       }
-      warehouses = eventBody.warehouses
       await updateStocks(warehouses)
       return {
         statusCode: 200,
