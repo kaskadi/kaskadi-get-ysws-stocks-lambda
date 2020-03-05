@@ -18,6 +18,11 @@ provider:
   apiGateway:
     restApiId: !ImportValue KaskadiStocksRestAPIGatewayId
     restApiRootResourceId: !ImportValue KaskadiStocksRestAPIGatewayRootResourceId
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - sns:Publish
+      Resource: !Ref KaskadiStockUpdateTopic
 
 functions:
   KaskadiStockUpdate:
@@ -38,9 +43,26 @@ functions:
       ES_ENDPOINT: ${env:ES_ENDPOINT}
     events:
       - http:
-          method: get
+          method: post
           path: update
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !ImportValue KaskadiStocksCognitoAuthorizerId
+      - schedule:
+          rate: cron(0 7 * * ? 1) # runs every monday at 7AM
+          enabled: true
+
+resources:
+  Resources:
+    KaskadiStockUpdateTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: KaskadiStockUpdate
+        DisplayName: Klimapartner's stock update
+  Outputs:
+    KaskadiStockUpdateTopicArn:
+      Value:
+        Ref: KaskadiStockUpdateTopic
+      Export:
+        Name: KaskadiStockUpdateTopicArn
