@@ -37,6 +37,7 @@ functions:
         - 'helpers/**'
         - 'node_modules/**'
     environment:
+      TOPIC_ARN: !Ref KaskadiStockUpdateTopic
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
       ES_ID: ${env:ES_ID}
       ES_SECRET: ${env:ES_SECRET}
@@ -60,6 +61,9 @@ resources:
       Properties:
         TopicName: KaskadiStockUpdate
         DisplayName: Klimapartner's stock update
+        Subscription:
+          - Endpoint: "a.lemaire@klimapartner.de"
+            Protocol: email
   Outputs:
     KaskadiStockUpdateTopicArn:
       Value:
