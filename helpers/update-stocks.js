@@ -3,7 +3,7 @@ const stockUpdaters = {
 }
 
 module.exports = async (warehouses) => {
-  console.log(warehouses)
+  console.log('warehouses requested for update', warehouses)
   for (const warehouse of warehouses) {
     await stockUpdaters[warehouse]()
   }

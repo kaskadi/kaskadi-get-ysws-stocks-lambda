@@ -12,7 +12,7 @@ module.exports = async () => {
   const yswsData = await client.getAllProducts()
   const products = await filterProducts(yswsData.products)
   const stocks = await getStocks(products)
-  console.log(stocks)
+  console.log('ysws stocks', stocks)
   for (const stock of stocks) {
     await updateProductStocks('ysws', stock.id, stock.stockData)
   }
