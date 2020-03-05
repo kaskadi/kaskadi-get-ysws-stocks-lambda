@@ -6,10 +6,10 @@ const updateStocks = require('./helpers/update-stocks.js')
 
 module.exports.handler = async (event) => {
   const eventSource = getLambdaEventSource(event)
+  let warehouses
   switch (eventSource) {
     case 'api':
       const eventBody = JSON.parse(event.body)
-      let warehouses
       if (eventBody.warehouses[0] === '*') {
         warehouses = await listWarehouses()
       }
@@ -25,7 +25,7 @@ module.exports.handler = async (event) => {
         })
       }
     case 'scheduled':
-      const warehouses = await listWarehouses()
+      warehouses = await listWarehouses()
       await updateStocks(warehouses)
       const params = {
         Message: 'Stocks updated!',
