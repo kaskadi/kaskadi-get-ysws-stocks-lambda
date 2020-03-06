@@ -29,6 +29,7 @@ functions:
     handler: kaskadi-get-ysws-stocks-lambda.handler
     name: ${self:service.name}
     layers:
+      - !ImportValue KaskadiEsLayerArn
       - !ImportValue KaskadiWemaloLayerArn
     package:
       include:
@@ -36,7 +37,9 @@ functions:
         - 'node_modules/**'
     environment:
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
-      LAST_UPDATED: ''
+      ES_ID: ${env:ES_ID}
+      ES_SECRET: ${env:ES_SECRET}
+      ES_ENDPOINT: ${env:ES_ENDPOINT}
     events:
       - http:
           method: get
