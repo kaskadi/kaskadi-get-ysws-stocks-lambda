@@ -23,7 +23,7 @@ module.exports.handler = async (event) => {
     FunctionName: 'kaskadi-update-stocks-lambda',
     Payload: JSON.stringify(invokeEvent),
     InvocationType: 'Event'
-  }.promise()
+  }).promise()
   return {
     statusCode: 200,
     headers: {
