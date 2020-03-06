@@ -19,11 +19,11 @@ module.exports.handler = async (event) => {
     stockData: stocks,
     warehouse: 'ysws'
   }
-  lambda.invoke({
+  await lambda.invoke({
     FunctionName: 'kaskadi-update-stocks-lambda',
     Payload: JSON.stringify(invokeEvent),
-    InvocationType: 'Event'
-  }).promise()
+    InvocationType: 'Event' // makes the operation asynchronous
+  }).promise() // we await here the API call to invoke the lambda, not the lambda invokation itself
   return {
     statusCode: 200,
     headers: {
