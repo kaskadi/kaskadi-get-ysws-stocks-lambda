@@ -6,8 +6,7 @@ on:
       - 'release/**'
     paths:
       - 'serverless.yml'
-      - 'kaskadi-stock-update-lambda.js'
-      - 'helpers/**'
+      - 'kaskadi-get-ysws-stocks-lambda.js'
 jobs:
   deploy:
     runs-on: ubuntu-latest
