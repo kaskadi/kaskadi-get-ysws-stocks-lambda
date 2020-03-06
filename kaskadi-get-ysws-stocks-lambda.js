@@ -24,7 +24,7 @@ module.exports.handler = async (event) => {
   const lastUpdated = (await es.get({
     id: 'ysws',
     index: 'warehouses'
-  }))._source.stock_last_updated || (new Date(2019, 0, 1, 0)).getTime()
+  }))._source.stock_last_updated
   const yswsStockData = await client.availableStock(new Date(lastUpdated))
   if (yswsStockData.articles.length > 0) {
     const stocks = getStocksData(yswsStockData)
