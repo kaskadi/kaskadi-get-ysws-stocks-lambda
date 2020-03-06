@@ -20,7 +20,7 @@ module.exports.handler = async (event) => {
   }
   lambda.invoke({
     FunctionName: 'kaskadi-update-stocks-lambda',
-    Payload: JSON.stringify(event, null, 2),
+    Payload: JSON.stringify(event),
     InvocationType: 'Event'
   }.promise()
 }
