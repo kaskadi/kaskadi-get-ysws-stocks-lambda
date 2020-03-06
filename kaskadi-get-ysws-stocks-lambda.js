@@ -10,23 +10,27 @@ const es = require('aws-es-client')({
   url: process.env.ES_ENDPOINT
 })
 
+let response = {
+  statusCode: 200,
+  headers: {
+    'Access-Control-Allow-Origin': '*'
+  },
+  body: JSON.stringify({
+    message: 'Stocks fetched from YSWS'
+  })
+}
+
 module.exports.handler = async (event) => {
   const lastUpdated = (await es.get({
     id: 'ysws',
     index: 'warehouses'
   }))._source.stock_last_updated || (new Date(2019, 0, 1, 0)).getTime()
   const yswsStockData = await client.availableStock(new Date(lastUpdated))
-  const stocks = getStocksData(yswsStockData)
-  await invokeStockUpdate(stocks)
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify({
-      message: 'Stocks fetched from YSWS'
-    })
+  if (yswsStockData.articles.length > 0) {
+    const stocks = getStocksData(yswsStockData)
+    await invokeStockUpdate(stocks)
   }
+  return response
 }
 
 async function invokeStockUpdate(stocks) {
