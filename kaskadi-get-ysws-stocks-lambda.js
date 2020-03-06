@@ -14,13 +14,13 @@ module.exports.handler = async (event) => {
       quantity: article.quantity
     }
   })
-  const event = {
+  const invokeEvent = {
     stockData: stocks,
     warehouse: 'ysws'
   }
   lambda.invoke({
     FunctionName: 'kaskadi-update-stocks-lambda',
-    Payload: JSON.stringify(event),
+    Payload: JSON.stringify(invokeEvent),
     InvocationType: 'Event'
   }.promise()
 }
