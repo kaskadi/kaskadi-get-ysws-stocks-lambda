@@ -24,4 +24,13 @@ module.exports.handler = async (event) => {
     Payload: JSON.stringify(invokeEvent),
     InvocationType: 'Event'
   }.promise()
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
+    body: JSON.stringify({
+      message: 'Stocks fetched from YSWS'
+    })
+  }
 }
