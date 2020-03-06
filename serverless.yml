@@ -18,6 +18,11 @@ provider:
   apiGateway:
     restApiId: !ImportValue KaskadiStocksRestAPIGatewayId
     restApiRootResourceId: !ImportValue KaskadiStocksRestAPIGatewayRootResourceId
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: 'arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-update-stocks-lambda' # not using export/import logic to avoid coupling of stack which could cause troubles with deployment in that case
 
 functions:
   KaskadiStockUpdate:
