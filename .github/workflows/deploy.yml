@@ -6,8 +6,7 @@ on:
       - 'release/**'
     paths:
       - 'serverless.yml'
-      - 'kaskadi-stock-update-lambda.js'
-      - 'helpers/**'
+      - 'kaskadi-get-ysws-stocks-lambda.js'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -25,9 +24,6 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_KEY_SECRET }}
         SLS_DEPLOY_BUCKET: ${{ secrets.SLS_DEPLOY_BUCKET }}
         WEMALO_TOKEN: ${{ secrets.WEMALO_TOKEN }}
-        ES_ID: ${{ secrets.ES_ID }}
-        ES_SECRET: ${{ secrets.ES_SECRET }}
-        ES_ENDPOINT: ${{ secrets.ES_ENDPOINT }}
     - name: serverless-deploy
       uses: kaskadi/action-slscli@master
       with:
@@ -37,6 +33,3 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_KEY_SECRET }}
         SLS_DEPLOY_BUCKET: ${{ secrets.SLS_DEPLOY_BUCKET }}
         WEMALO_TOKEN: ${{ secrets.WEMALO_TOKEN }}
-        ES_ID: ${{ secrets.ES_ID }}
-        ES_SECRET: ${{ secrets.ES_SECRET }}
-        ES_ENDPOINT: ${{ secrets.ES_ENDPOINT }}

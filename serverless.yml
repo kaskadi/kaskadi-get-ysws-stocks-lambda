@@ -1,5 +1,5 @@
 service:
-  name: kaskadi-stock-update-lambda
+  name: kaskadi-get-ysws-stocks-lambda
 
 package:
   individually: true
@@ -18,56 +18,28 @@ provider:
   apiGateway:
     restApiId: !ImportValue KaskadiStocksRestAPIGatewayId
     restApiRootResourceId: !ImportValue KaskadiStocksRestAPIGatewayRootResourceId
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - sns:Publish
-      Resource: !Ref KaskadiStockUpdateTopic
 
 functions:
   KaskadiStockUpdate:
-    handler: kaskadi-stock-update-lambda.handler
+    handler: kaskadi-get-ysws-stocks-lambda.handler
     name: ${self:service.name}
-    timeout: 120
     layers:
-      - !ImportValue KaskadiEsLayerArn
       - !ImportValue KaskadiWemaloLayerArn
     package:
       include:
-        - 'kaskadi-stock-update-lambda.js'
-        - 'helpers/**'
+        - 'kaskadi-get-ysws-stocks-lambda.js'
         - 'node_modules/**'
     environment:
-      TOPIC_ARN: !Ref KaskadiStockUpdateTopic
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
-      ES_ID: ${env:ES_ID}
-      ES_SECRET: ${env:ES_SECRET}
-      ES_ENDPOINT: ${env:ES_ENDPOINT}
+      LAST_UPDATED: ''
     events:
       - http:
-          method: post
-          path: update
+          method: get
+          path: update/ysws
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
             authorizerId: !ImportValue KaskadiStocksCognitoAuthorizerId
       - schedule:
-          rate: cron(0 7 * * ? 1) # runs every monday at 7AM
+          rate: cron(55 6 * * ? 1) # runs every monday at 6:55AM
           enabled: true
-
-resources:
-  Resources:
-    KaskadiStockUpdateTopic:
-      Type: AWS::SNS::Topic
-      Properties:
-        TopicName: KaskadiStockUpdate
-        DisplayName: Klimapartner's stock update
-        Subscription:
-          - Endpoint: "a.lemaire@klimapartner.de"
-            Protocol: email
-  Outputs:
-    KaskadiStockUpdateTopicArn:
-      Value:
-        Ref: KaskadiStockUpdateTopic
-      Export:
-        Name: KaskadiStockUpdateTopicArn
