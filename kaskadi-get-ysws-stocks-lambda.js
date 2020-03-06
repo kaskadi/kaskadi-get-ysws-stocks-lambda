@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const lambda = new aws.Lambda({
+const lambda = new AWS.Lambda({
   region: 'eu-central-1'
 })
 const WemaloClient = require('wemalo-api-wrapper')
