@@ -1,24 +1,12 @@
 const AWS = require('aws-sdk')
-const lambda = new AWS.Lambda({
-  region: 'eu-central-1'
-})
 const WemaloClient = require('wemalo-api-wrapper')
 const client = new WemaloClient({token: process.env.WEMALO_TOKEN})
+const lambda = new AWS.Lambda({region: 'eu-central-1'})
 const es = require('aws-es-client')({
   id: process.env.ES_ID,
   token: process.env.ES_SECRET,
   url: process.env.ES_ENDPOINT
 })
-
-let response = {
-  statusCode: 200,
-  headers: {
-    'Access-Control-Allow-Origin': '*'
-  },
-  body: JSON.stringify({
-    message: 'Stocks fetched from YSWS'
-  })
-}
 
 module.exports.handler = async (event) => {
   const lastUpdated = (await es.get({
@@ -30,7 +18,15 @@ module.exports.handler = async (event) => {
     const stocks = getStocksData(yswsStockData)
     await invokeStockUpdate(stocks)
   }
-  return response
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
+    body: JSON.stringify({
+      message: 'Stocks fetched from YSWS'
+    })
+  }
 }
 
 async function invokeStockUpdate(stocks) {
