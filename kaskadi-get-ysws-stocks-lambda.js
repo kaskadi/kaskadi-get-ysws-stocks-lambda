@@ -6,7 +6,8 @@ const WemaloClient = require('wemalo-api-wrapper')
 const client = new WemaloClient({token: process.env.WEMALO_TOKEN})
 
 module.exports.handler = async (event) => {
-  const yswsStockData = await client.availableStock(new Date(parseInt(process.env.LAST_UPDATED)))
+  const lastUpdated = process.env.LAST_UPDATED.length > 0 ? parseInt(process.env.LAST_UPDATED) : (new Date(2019, 0, 1, 0)).getTime()
+  const yswsStockData = await client.availableStock(new Date(lastUpdated))
   process.env.LAST_UPDATED = Date.now().toString()
   const stocks = yswsStockData.articles.map(article => {
     return {
