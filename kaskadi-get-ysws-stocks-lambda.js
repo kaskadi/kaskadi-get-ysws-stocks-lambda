@@ -12,24 +12,24 @@ module.exports.handler = async (event) => {
   const lastUpdated = (await es.get({
     id: 'ysws',
     index: 'warehouses'
-  }))._source.stock_last_updated
-  const yswsStockData = await client.availableStock(new Date(lastUpdated))
-  if (yswsStockData.articles.length > 0) {
-    const stocks = getStocksData(yswsStockData)
-    await invokeStockUpdate(stocks)
-  }
+  }))._source.stockLastUpdated
+  const stocks = await getStocksData(lastUpdated)
+  await setStockData(stocks)
   return {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-      message: 'Stocks fetched from YSWS'
+      stocks
     })
   }
 }
 
-async function invokeStockUpdate(stocks) {
+async function setStockData(stocks) {
+  if (stocks.length === 0) {
+    return
+  }
   const event = {
     stockData: stocks,
     warehouse: 'ysws'
@@ -37,11 +37,12 @@ async function invokeStockUpdate(stocks) {
   await lambda.invoke({
     FunctionName: 'kaskadi-update-stocks-lambda',
     Payload: JSON.stringify(event),
-    InvocationType: 'Event' // makes the operation asynchronous
-  }).promise() // we await here the API call to invoke the lambda, not the lambda invokation itself
+    InvocationType: 'Event'
+  }).promise()
 }
 
-function getStocksData(yswsData) {
+async function getStocksData(lastUpdated) {
+  const yswsStockData = await client.availableStock(new Date(lastUpdated))
   return yswsData.articles.map(article => {
     return {
       id: article.externalId,
