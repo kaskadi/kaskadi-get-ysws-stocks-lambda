@@ -1,5 +1,5 @@
 service:
-  name: kaskadi-get-ysws-stocks-lambda
+  name: kaskadi-update-ysws-stocks-lambda
 
 package:
   individually: true
@@ -21,18 +21,18 @@ provider:
     - Effect: Allow
       Action:
         - lambda:InvokeFunction
-      Resource: 'arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-update-stocks-lambda' # not using export/import logic to avoid coupling of stack which could cause troubles with deployment in that case
+      Resource: 'arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-set-stocks-lambda' # not using export/import logic to avoid coupling of stack which could cause troubles with deployment in that case
 
 functions:
   KaskadiStockUpdate:
-    handler: kaskadi-get-ysws-stocks-lambda.handler
+    handler: kaskadi-update-ysws-stocks-lambda.handler
     name: ${self:service.name}
     layers:
       - !ImportValue KaskadiEsLayerArn
       - !ImportValue KaskadiWemaloLayerArn
     package:
       include:
-        - 'kaskadi-get-ysws-stocks-lambda.js'
+        - 'kaskadi-update-ysws-stocks-lambda.js'
         - 'node_modules/**'
     environment:
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
@@ -42,7 +42,7 @@ functions:
     events:
       - http:
           method: get
-          path: update/ysws
+          path: ysws/update
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
