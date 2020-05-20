@@ -14,7 +14,10 @@ module.exports.handler = async (event) => {
     index: 'warehouses'
   }))._source.stockLastUpdated
   const stocks = await getStocksData(lastUpdated)
-  await setStockData(stocks)
+  await setStockData({
+    stockData: stocks,
+    warehouse: 'ysws'
+  })
   return {
     statusCode: 200,
     headers: {
@@ -26,17 +29,13 @@ module.exports.handler = async (event) => {
   }
 }
 
-async function setStockData(stocks) {
-  if (stocks.length === 0) {
+async function setStockData(payload) {
+  if (payload.stocks.length === 0) {
     return
   }
-  const event = {
-    stockData: stocks,
-    warehouse: 'ysws'
-  }
   await lambda.invoke({
-    FunctionName: 'kaskadi-update-stocks-lambda',
-    Payload: JSON.stringify(event),
+    FunctionName: 'kaskadi-set-stocks-lambda',
+    Payload: JSON.stringify(payload),
     InvocationType: 'Event'
   }).promise()
 }
