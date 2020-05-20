@@ -30,7 +30,7 @@ module.exports.handler = async (event) => {
 }
 
 async function setStockData(payload) {
-  if (payload.stocks.length === 0) {
+  if (payload.stockData.length === 0) {
     return
   }
   await lambda.invoke({
