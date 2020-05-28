@@ -23,17 +23,28 @@ provider:
         - lambda:InvokeFunction
       Resource: 'arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-set-stocks-lambda' # not using export/import logic to avoid coupling of stack which could cause troubles with deployment in that case
 
+layers:
+  KaskadiStockUpdateLayer:
+    path: layer
+    name: ${self:service.name}-layer
+    description: Layer for ${self:service.name}
+    compatibleRuntimes:
+      - nodejs10.x
+      - nodejs12.x
+    licenseInfo: MIT
+    package:
+      include:
+        - '**/**'
+
 functions:
   KaskadiStockUpdate:
     handler: kaskadi-update-ysws-stocks-lambda.handler
     name: ${self:service.name}
     layers:
-      - !ImportValue KaskadiEsLayerArn
-      - !ImportValue KaskadiWemaloLayerArn
+      - { Ref: KaskadiStockUpdateLayerLambdaLayer }
     package:
       include:
         - 'kaskadi-update-ysws-stocks-lambda.js'
-        - 'node_modules/**'
     environment:
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
       ES_ID: ${env:ES_ID}

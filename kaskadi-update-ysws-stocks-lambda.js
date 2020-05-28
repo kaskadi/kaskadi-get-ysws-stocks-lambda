@@ -12,7 +12,7 @@ module.exports.handler = async (event) => {
   const lastUpdated = (await es.get({
     id: 'ysws',
     index: 'warehouses'
-  }))._source.stockLastUpdated
+  })).body._source.stockLastUpdated
   const stocks = await getStocksData(lastUpdated)
   await setStockData({
     stockData: stocks,

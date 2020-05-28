@@ -20,7 +20,5 @@
   "bugs": {
     "url": "https://github.com/kaskadi/kaskadi-update-ysws-stocks-lambda/issues"
   },
-  "homepage": "https://github.com/kaskadi/kaskadi-update-ysws-stocks-lambda#readme",
-  "devDependencies": {},
-  "dependencies": {}
+  "homepage": "https://github.com/kaskadi/kaskadi-update-ysws-stocks-lambda#readme"
 }
