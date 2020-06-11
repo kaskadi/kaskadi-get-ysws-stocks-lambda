@@ -25,9 +25,7 @@ module.exports.handler = async (event) => {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify({
-      payload
-    })
+    body: JSON.stringify([payload])
   }
 }
 
