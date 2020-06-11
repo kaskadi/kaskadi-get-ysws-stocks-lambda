@@ -15,8 +15,9 @@ module.exports.handler = async (event) => {
   })).body._source.stockLastUpdated
   const stocks = await getStocksData(lastUpdated)
   await setStockData({
-    stockData: stocks,
-    warehouse: 'ysws'
+    provider: 'ysws',
+    warehouse: 'ysws',
+    stockData: stocks
   })
   return {
     statusCode: 200,
