@@ -45,7 +45,7 @@ async function getStocksData(lastUpdated) {
   const yswsData = await client.availableStock(new Date(lastUpdated))
   return yswsData.articles.map(article => {
     return {
-      id: article.externalId,
+      id: article.ean,
       quantity: article.quantity
     }
   })
