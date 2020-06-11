@@ -15,7 +15,7 @@ module.exports.handler = async (event) => {
   })).body._source.stockLastUpdated
   const stocks = await getStocksData(lastUpdated)
   await setStockData({
-    provider: 'ysws',
+    idType: 'EAN',
     warehouse: 'ysws',
     stockData: stocks
   })
