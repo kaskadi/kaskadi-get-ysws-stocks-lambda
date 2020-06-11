@@ -14,18 +14,19 @@ module.exports.handler = async (event) => {
     index: 'warehouses'
   })).body._source.stockLastUpdated
   const stocks = await getStocksData(lastUpdated)
-  await setStockData({
+  const payload = {
     idType: 'EAN',
     warehouse: 'ysws',
     stockData: stocks
-  })
+  } 
+  await setStockData(payload)
   return {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify({
-      stocks
+      payload
     })
   }
 }
