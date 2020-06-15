@@ -45,6 +45,7 @@ functions:
     package:
       include:
         - 'kaskadi-update-ysws-stocks-lambda.js'
+        - 'helpers/**'
     environment:
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
       ES_ID: ${env:ES_ID}
