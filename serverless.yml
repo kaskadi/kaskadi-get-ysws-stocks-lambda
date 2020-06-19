@@ -16,7 +16,7 @@ provider:
     name: kaskadi-serverless-deployment-bucket
   apiGateway:
     restApiId: !ImportValue kaskadi-stocks-api-id
-    restApiRootResourceId: !ImportValue kaskadi-stocks-api-root-resource-id
+    restApiRootResourceId: !ImportValue kaskadi-stocks-api-ysws-resource-id
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -54,7 +54,7 @@ functions:
     events:
       - http:
           method: get
-          path: ysws/update
+          path: update
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
