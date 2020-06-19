@@ -1,7 +1,7 @@
 {
-  "name": "kaskadi-update-ysws-stocks-lambda-layer",
+  "name": "update-ysws-stocks-layer",
   "version": "1.0.0",
-  "description": "Layer for kaskadi-update-ysws-stocks-lambda",
+  "description": "Layer for update-ysws-stocks",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

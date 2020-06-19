@@ -1,5 +1,5 @@
 service:
-  name: kaskadi-update-ysws-stocks-lambda
+  name: update-ysws-stocks
 
 package:
   individually: true
@@ -15,8 +15,8 @@ provider:
   deploymentBucket:
     name: kaskadi-serverless-deployment-bucket
   apiGateway:
-    restApiId: !ImportValue KaskadiStocksRestAPIGatewayId
-    restApiRootResourceId: !ImportValue KaskadiStocksRestAPIGatewayRootResourceId
+    restApiId: !ImportValue kaskadi-stocks-api-id
+    restApiRootResourceId: !ImportValue kaskadi-stocks-api-root-resource-id
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -24,7 +24,7 @@ provider:
       Resource: 'arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-set-stocks-lambda' # not using export/import logic to avoid coupling of stack which could cause troubles with deployment in that case
 
 layers:
-  KaskadiStockUpdateLayer:
+  StockUpdateLayer:
     path: layer
     name: ${self:service.name}-layer
     description: Layer for ${self:service.name}
@@ -37,14 +37,14 @@ layers:
         - '**/**'
 
 functions:
-  KaskadiStockUpdate:
-    handler: kaskadi-update-ysws-stocks-lambda.handler
+  StockUpdate:
+    handler: update-ysws-stocks.handler
     name: ${self:service.name}
     layers:
-      - { Ref: KaskadiStockUpdateLayerLambdaLayer }
+      - { Ref: StockUpdateLayerLambdaLayer }
     package:
       include:
-        - 'kaskadi-update-ysws-stocks-lambda.js'
+        - 'update-ysws-stocks.js'
         - 'helpers/**'
     environment:
       WEMALO_TOKEN: ${env:WEMALO_TOKEN}
@@ -58,9 +58,9 @@ functions:
           cors: true
           authorizer:
             type: COGNITO_USER_POOLS
-            authorizerId: !ImportValue KaskadiStocksCognitoAuthorizerId
+            authorizerId: !ImportValue kaskadi-stocks-api-cognito-authorizer-id
       - schedule:
-          rate: cron(55 6 ? * MON *) # runs every monday at 6:55AM
+          rate: cron(0 7 ? * MON *) # runs every monday at 7:00AM
           enabled: true
     destinations:
       onSuccess: arn:aws:lambda:eu-central-1:374163881813:function:kaskadi-set-stocks-lambda
